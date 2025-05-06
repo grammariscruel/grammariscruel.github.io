@@ -36,12 +36,14 @@
     <div id="message">Loading game...</div>
   </div>
 
-  <!-- Replace with LimeJS CDN or your own hosted version -->
-  <script src="https://cdn.jsdelivr.net/npm/limejs@1.0.0"></script>
+  <!-- Attempt to load LimeJS from CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/limejs/0.9.0/lime.min.js"></script>
+
   <script>
-    // Example: Replace this with the actual setup for your game
+    // Initialize the game after LimeJS is loaded
     function initGame() {
       if (typeof lime !== "undefined") {
+        console.log("LimeJS loaded successfully!");  // Log to console for debugging
         document.getElementById('message').style.display = 'none';  // Hide loading message
 
         // Create a new game director
@@ -63,15 +65,22 @@
           currentColor = 1 - currentColor;
         });
       } else {
+        console.error("LimeJS failed to load.");
         document.getElementById('message').innerText = "⚠️ Game failed to load. Please try again later.";
       }
     }
 
-    // Run the game setup after the page has fully loaded
+    // Check if LimeJS is ready and run game setup
     window.addEventListener("load", function () {
-      setTimeout(initGame, 1000);
+      if (typeof lime === "undefined") {
+        console.error("LimeJS not found or failed to load!");
+        document.getElementById('message').innerText = "⚠️ Failed to load game engine.";
+      } else {
+        setTimeout(initGame, 1000);  // Wait a second before starting the game
+      }
     });
 
+    // Prevent default behavior of touchmove (for mobile compatibility)
     window.addEventListener("touchmove", function (event) {
       event.preventDefault();
     }, { passive: false });
